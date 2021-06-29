@@ -3,6 +3,7 @@ const { Engine, Render, Runner, World, Bodies } = Matter;
 const width = 600;
 const height = 600;
 const cells = 3;
+const unitLength = width / cells;
 
 const engine = Engine.create();
 const { world } = engine;
@@ -53,14 +54,15 @@ const stepThroughCell = (row, column) => { //funciton to create a maze
     if(grid[row][column]) { //check if the cell was already visited
         return;
     }
-    grid[row][column] = true;
-    
+    grid[row][column] = true; //marking the cell as visited
+
     const neighbors = shuffle([ //getting all naighbors of the current cell
-        [row-1, column, 'up'],
-        [row, column+1, 'rihgt'],
+        [row - 1, column, 'up'],
+        [row, column + 1, 'right'],
         [row+1, column, 'down'],
         [row, column-1, 'left']
     ]);
+    
     for(let neighbor of neighbors) {
         const [nextRow, nextColumn, direction] = neighbor;
 
@@ -69,10 +71,14 @@ const stepThroughCell = (row, column) => { //funciton to create a maze
             nextRow >= cells ||
             nextColumn < 0 ||
             nextColumn >= cells 
-        ) { continue;}
+        ) { 
+            continue;
+        }
+
         if(grid[nextRow][nextColumn]) { //check if we alredy visited that neighbor
             continue;
         }
+        
         if(direction === 'left') {//change a chosen border to true by direction of current neighbor
             verticals[row][column - 1] = true;
         } else if(direction === 'right') {
@@ -87,4 +93,38 @@ const stepThroughCell = (row, column) => { //funciton to create a maze
 };
 stepThroughCell(startRow, startColumn);
 
+horizontals.forEach((row, rowIndex) => {
+    row.forEach((open, columnIndex) => {
+        if(open) { //if boolean = true => no wall needed
+            return;
+        }
+        const wall = Bodies.rectangle(
+            columnIndex * unitLength + unitLength / 2,
+            rowIndex * unitLength + unitLength,
+            unitLength, 
+            10,
+            {
+                isStatic: true
+            }
+        );
+        World.add(world, wall);
+    })
+})
+verticals.forEach((row, rowIndex) => {
+    row.forEach((open, columnIndex) => {
+        if(open) { //if boolean = true => no wall needed
+            return;
+        }
+        const wall = Bodies.rectangle(
+            columnIndex * unitLength + unitLength,
+            rowIndex * unitLength + unitLength / 2,
+            10,
+            unitLength, 
+            {
+                isStatic: true
+            }
+        );
+        World.add(world, wall);
+    })
+})
 
