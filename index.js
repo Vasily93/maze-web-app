@@ -2,7 +2,7 @@ const { Engine, Render, Runner, World, Bodies } = Matter;
 
 const width = 600;
 const height = 600;
-const cells = 3;
+const cells = 15;
 const unitLength = width / cells;
 
 const engine = Engine.create();
@@ -127,4 +127,27 @@ verticals.forEach((row, rowIndex) => {
         World.add(world, wall);
     })
 })
+
+//Finish body
+const fihish = Bodies.rectangle(
+    width - unitLength / 2, 
+    height- unitLength / 2,
+    unitLength * .6,
+    unitLength * .6,
+    {
+        isStatic: true,
+        
+    })
+World.add(world,fihish);
+
+//Ball body
+const ball = Bodies.circle(
+    unitLength / 2,
+    unitLength / 2,
+    unitLength * .3,
+    {
+        isStatic: true
+    }
+)
+World.add(world, ball);
 
