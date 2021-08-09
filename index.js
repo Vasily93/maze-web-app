@@ -185,3 +185,8 @@ Events.on(engine, 'collisionStart', event => {
     })
     
 })
+
+const restartBtn = document.getElementById('restart');
+restartBtn.addEventListener('click', () => {
+    location.reload();
+})
